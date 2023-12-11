@@ -1,10 +1,17 @@
 export const API_URL = 'http://movies-api';
 
-export function getAllMovies()
-{
-    return fetch(`${API_URL}/movies`)
-    .then(
-        (response)=> extractCollectionAndPagination(response));
+export function getAllMovies(urlSearchParams, abortController) {
+    console.log(urlSearchParams);
+    if (!(urlSearchParams instanceof URLSearchParams)) {
+        return Promise.reject(new Error("un type URLSearchParams attendu"));
+    }
+    if (abortController){
+        return fetch(`${API_URL}/movies?${urlSearchParams.toString()}`,
+        {signal:abortController.signal})
+    .then(extractCollectionAndPagination);
+    }
+    return fetch(`${API_URL}/movies?${urlSearchParams.toString()}`)
+        .then(extractCollectionAndPagination);
 }
 
 export function posterUrl(imagePath,size='original')

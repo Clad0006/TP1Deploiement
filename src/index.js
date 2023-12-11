@@ -1,3 +1,4 @@
-import {updateMoviesElt} from "./movies-ui";
+import {setSortButtonsEltsEvents, updateMoviesElt} from "./movies-ui";
 
 updateMoviesElt();
+setSortButtonsEltsEvents();
