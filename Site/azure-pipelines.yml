@@ -12,15 +12,15 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: '16.x'
-          - task: Npm@2
+          - task: Npm@1
             inputs:
               command: 'install' # installation des dépendances
               workingDir: '$(System.DefaultWorkingDirectory)'
-          - task: Npm@2
+          - task: Npm@1
             inputs:
               command: 'run build' # compilation du projet
               workingDir: '$(System.DefaultWorkingDirectory)'
-          - task: Npm@2
+          - task: Npm@1
             inputs:
               command: 'run test' # lancement des tests
               workingDir: '$(System.DefaultWorkingDirectory)'
@@ -29,8 +29,7 @@ stages:
     jobs:
       - job: DeployToAzure
         steps:
-          - task: AzureWebAppDeployment@4
+          - task: AzureRMWebAppDeployment@4
             inputs:
               azureSubscription: '77cf95a5-2236-4e63-be8d-d407dfbc714e' # id d'abonnement
-              appName: 'MyWebApp'
               package: '$(Build.ArtifactStagingDirectory)/MyWebApp.zip'
