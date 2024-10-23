@@ -1,0 +1,36 @@
+trigger:
+  - master #s'enclenche lorsqu'on push sur la branche master
+
+pool:
+  vmImage: 'ubuntu-latest' #image linux
+
+stages:
+  - stage: Build # compilation et validation
+    jobs:
+      - job: BuildAndTest
+        steps:
+          - task: NodeTool@0
+            inputs:
+              versionSpec: '16.x'
+          - task: Npm@2
+            inputs:
+              command: 'install' # installation des dépendances
+              workingDir: '$(System.DefaultWorkingDirectory)'
+          - task: Npm@2
+            inputs:
+              command: 'run build' # compilation du projet
+              workingDir: '$(System.DefaultWorkingDirectory)'
+          - task: Npm@2
+            inputs:
+              command: 'run test' # lancement des tests
+              workingDir: '$(System.DefaultWorkingDirectory)'
+
+  - stage: Deploy # déploiement sur azur
+    jobs:
+      - job: DeployToAzure
+        steps:
+          - task: AzureWebAppDeployment@4
+            inputs:
+              azureSubscription: '77cf95a5-2236-4e63-be8d-d407dfbc714e' # id d'abonnement
+              appName: 'MyWebApp'
+              package: '$(Build.ArtifactStagingDirectory)/MyWebApp.zip'
