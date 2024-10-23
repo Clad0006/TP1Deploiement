@@ -29,7 +29,9 @@ stages:
     jobs:
       - job: DeployToAzure
         steps:
-          - task: AzureRMWebAppDeployment@4
+          - task: AzureRmWebAppDeployment@4
+            displayName: 'Deploy to Azure Web App'
             inputs:
-              azureSubscription: '77cf95a5-2236-4e63-be8d-d407dfbc714e' # id d'abonnement
+              azureSubscription: 'Azure subscription 1'
+              appName: 'MyWebApp'
               package: '$(Build.ArtifactStagingDirectory)/MyWebApp.zip'
