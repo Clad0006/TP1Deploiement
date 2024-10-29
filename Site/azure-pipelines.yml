@@ -32,6 +32,6 @@ stages:
           - task: AzureRmWebAppDeployment@4
             displayName: 'Deploy to Azure Web App'
             inputs:
-              azureSubscription: 'Azure subscription 1'
+              azureSubscription: 'Authenticate'
               appName: 'MyWebApp'
               package: '$(Build.ArtifactStagingDirectory)/MyWebApp.zip'
