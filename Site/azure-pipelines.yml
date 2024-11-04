@@ -5,6 +5,20 @@ pool:
   vmImage: 'ubuntu-latest' #image linux
 
 stages:
+  - stage: DeployResources
+    displayName: Déploiement des ressources
+    jobs:
+      - job: Deploy
+        displayName: Déployer les ressources
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: Bash@3
+            displayName: Exécuter le script de déploiement
+            inputs:
+              targetType: 'filePath'
+              filePath: '$(System.DefaultWorkingDirectory)/ScriptShellTP1.sh'
+
   - stage: Build # compilation et validation
     jobs:
       - job: BuildAndTest
