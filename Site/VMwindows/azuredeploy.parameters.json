@@ -111,7 +111,7 @@
       "value": "vmadmin"
     },
     "adminPassword": {
-      "value": null
+      "value": "admin-password1"
     },
     "patchMode": {
       "value": "AutomaticByPlatform"
