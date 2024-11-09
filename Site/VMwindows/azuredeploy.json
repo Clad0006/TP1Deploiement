@@ -32,6 +32,9 @@
     "publicIpAddressName1": {
       "type": "string"
     },
+    "publicIpAddressName2": {
+      "type": "string"
+    },
     "publicIpAddressType": {
       "type": "string"
     },
@@ -72,7 +75,7 @@
       "type": "string"
     },
     "adminPassword": {
-      "type": "secureString"
+      "type": "securestring"
     },
     "patchMode": {
       "type": "string"
@@ -198,6 +201,21 @@
       "zones": []
     },
     {
+      "name": "[parameters('publicIpAddressName2')]",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "apiVersion": "2020-08-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIpAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
+        "idleTimeoutInMinutes": 15
+      },
+      "sku": {
+        "name": "Standard"
+      },
+      "zones": []
+    },
+    {
       "name": "[parameters('loadBalancerName')]",
       "type": "Microsoft.Network/loadBalancers",
       "apiVersion": "2021-05-01",
@@ -294,7 +312,7 @@
         "virtualMachineProfile": {
           "storageProfile": {
           "osDisk": {
-            "createOption": "fromImage",
+            "createOption": "FromImage",
             "managedDisk": {
               "storageAccountType": "[parameters('osDiskType')]"
             },
@@ -394,7 +412,7 @@
       "dependsOn": [
         "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
         "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
-        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]"
+        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName2'))]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -406,7 +424,7 @@
               },
               "privateIPAllocationMethod": "Dynamic",
               "publicIpAddress": {
-                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]",
+                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName2'))]",
                 "properties": {
                   "deleteOption": "[parameters('pipDeleteOption')]"
                 }
@@ -425,7 +443,7 @@
       "apiVersion": "2015-01-01",
       "type": "Microsoft.Resources/deployments",
       "properties": {
-        "mode": "incremental",
+        "mode": "Incremental",
         "templateLink": {
           "uri": "https://catalogartifact.azureedge.net/publicartifacts/Microsoft.CustomScriptExtension-arm-2.0.58/MainTemplate.json"
         },

@@ -68,6 +68,9 @@
     "publicIpAddressName1": {
       "value": "VM1-ip"
     },
+    "publicIpAddressName2": {
+      "value": "public-ip"
+    },
     "publicIpAddressType": {
       "value": "Static"
     },
