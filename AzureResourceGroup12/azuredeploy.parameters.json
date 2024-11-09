@@ -67,9 +67,9 @@
           "applicationSecurityGroups": [],
           "loadBalancerInboundNatPools": [],
           "enableAcceleratedNetworking": false,
-          "nsgName": "basicNsgTP1-vnet-sub1",
-          "nsgId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgTP1-vnet-sub1",
-          "pipName": "publicIp-TP1-vnet-sub1"
+          "nsgName": "basicNsgTP1-vnet",
+          "nsgId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgTP1-vnet",
+          "pipName": "publicIp-TP1-vnet"
         }
       ]
     },
