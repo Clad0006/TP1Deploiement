@@ -77,6 +77,15 @@
     "adminPassword": {
       "type": "securestring"
     },
+    "patchMode": {
+      "type": "string"
+    },
+    "enableHotpatching": {
+      "type": "bool"
+    },
+    "rebootSetting": {
+      "type": "string"
+    },
     "securityType": {
       "type": "string"
     },
@@ -357,7 +366,14 @@
           "computerNamePrefix": "VM",
           "windowsConfiguration": {
             "enableAutomaticUpdates": true,
-            "provisionVmAgent": true
+            "provisionVmAgent": true,
+            "patchSettings": {
+              "enableHotpatching": "[parameters('enableHotpatching')]",
+              "patchMode": "[parameters('patchMode')]",
+              "automaticByPlatformSettings": {
+                "rebootSetting": "[parameters('rebootSetting')]"
+              }
+            }
           }
         },
           "securityProfile": {
