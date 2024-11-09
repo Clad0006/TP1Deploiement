@@ -363,6 +363,7 @@
           "computerName": "[parameters('virtualMachineComputerName1')]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('adminPassword')]",
+          "computerNamePrefix": "VM",
           "windowsConfiguration": {
             "enableAutomaticUpdates": true,
             "provisionVmAgent": true,
