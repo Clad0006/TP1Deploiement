@@ -211,7 +211,7 @@
             "name": "[concat(parameters('loadBalancerName'), '-frontendconfig01')]",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIpAddresses', [concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]]"
+                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]"
               }
             }
           }
@@ -277,7 +277,7 @@
         ]
       },
       "dependsOn": [
-        "[concat('Microsoft.Network/publicIpAddresses/', concat(parameters('loadBalancerName'), '-publicip'))]"
+        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]"
       ]
     },
     {
