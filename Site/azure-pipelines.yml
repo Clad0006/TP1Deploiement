@@ -116,6 +116,6 @@ jobs:
         templateLocation: 'Linked artifact'
         csmFile: '$(Build.SourcesDirectory)\Site\VMwindows\azuredeploy.json'
         csmParametersFile: '$(Build.SourcesDirectory)\Site\VMwindows\azuredeploy.parameters.json'
-        overrideParameters: '-FileURI $(FileURL) -FileName $(FileName) -adminPassword $(AdminPass)'
+        overrideParameters: '-FileURI $(FileURL) -FileName $(FileName)'
         deploymentMode: 'Incremental'
         deploymentOutputs: 'StorageAccountDeployment'
