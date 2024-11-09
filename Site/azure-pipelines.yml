@@ -38,16 +38,16 @@ steps:
   displayName: Installer les dépendances
   inputs:
     command: 'install'
-    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
+    workingDir: '$(System.DefaultWorkingDirectory)/Site/code-site'
 - task: Npm@1
   displayName: Compiler le projet
   inputs:
     command: 'custom'
-    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
+    workingDir: '$(System.DefaultWorkingDirectory)/Site/code-site'
     customCommand: 'run build'
 - task: Npm@1
   displayName: Lancer les tests
   inputs:
     command: 'custom'
-    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
+    workingDir: '$(System.DefaultWorkingDirectory)/Site/code-site'
     customCommand: 'run test'
