@@ -1,51 +1,31 @@
 trigger:
-  - master #s'enclenche lorsqu'on push sur la branche master
+- master
 
-pool:
-  vmImage: 'ubuntu-latest' #image linux
+pool: "default"
 
-stages:
-  - stage: DeployResources
-    displayName: Déploiement des ressources
-    jobs:
-      - job: Deploy
-        displayName: Déployer les ressources
-        pool:
-          vmImage: 'ubuntu-latest'
-        steps:
-          - task: Bash@3
-            displayName: Exécuter le script de déploiement
-            inputs:
-              targetType: 'filePath'
-              filePath: '$(System.DefaultWorkingDirectory)/ScriptShellTP1.sh'
+steps:
+- task: Bash@3
+  displayName: Exécuter le script de déploiement
+  inputs:
+    filePath: '$(System.DefaultWorkingDirectory)/Site/ScriptShellTP1.sh'
 
-  - stage: Build # compilation et validation
-    jobs:
-      - job: BuildAndTest
-        steps:
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '16.x'
-          - task: Npm@1
-            inputs:
-              command: 'install' # installation des dépendances
-              workingDir: '$(System.DefaultWorkingDirectory)'
-          - task: Npm@1
-            inputs:
-              command: 'run build' # compilation du projet
-              workingDir: '$(System.DefaultWorkingDirectory)'
-          - task: Npm@1
-            inputs:
-              command: 'run test' # lancement des tests
-              workingDir: '$(System.DefaultWorkingDirectory)'
-
-  - stage: Deploy # déploiement sur azur
-    jobs:
-      - job: DeployToAzure
-        steps:
-          - task: AzureRmWebAppDeployment@4
-            displayName: 'Deploy to Azure Web App'
-            inputs:
-              azureSubscription: 'Authenticate'
-              appName: 'MyWebApp'
-              package: '$(Build.ArtifactStagingDirectory)/MyWebApp.zip'
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+- task: Npm@1
+  displayName: Installer les dépendances
+  inputs:
+    command: 'install'
+    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
+- task: Npm@1
+  displayName: Compiler le projet
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
+    customCommand: 'run build'
+- task: Npm@1
+  displayName: Lancer les tests
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
+    customCommand: 'run test'
