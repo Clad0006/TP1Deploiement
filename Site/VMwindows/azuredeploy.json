@@ -368,7 +368,6 @@
                   "settings": {
                     "protocol": "Tcp",
                     "port": 80,
-                    "requestPath": "</requestPath>",
                     "intervalInSeconds": 5,
                     "numberOfProbes": 1
                   }
