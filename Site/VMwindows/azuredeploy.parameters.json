@@ -114,7 +114,7 @@
       "value": "admin-password1"
     },
     "patchMode": {
-      "value": null
+      "value": "AutomaticByOS"
     },
     "enableHotpatching": {
       "value": false
