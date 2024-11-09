@@ -20,6 +20,8 @@ write_files:
           proxy_cache_bypass $http_upgrade;
         }
       }
+  - owner: www-data:www-data
+      path: /home/myapp/index.js
 runcmd:
   - service nginx restart
   - cd "/home/myapp"
