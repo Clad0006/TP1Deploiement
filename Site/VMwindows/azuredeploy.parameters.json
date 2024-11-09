@@ -146,8 +146,8 @@
     "networkSecurityGroups": {
       "value": [
         {
-          "name": "basicNsgTP1-vnet",
-          "id": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgTP1-vnet",
+          "name": "basicNsgVM1-vnet",
+          "id": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet",
           "rules": [
             {
               "name": "Tcp",
@@ -169,7 +169,7 @@
     "networkInterfaceConfigurations": {
       "value": [
         {
-          "name": "TP1-vnet-sub1",
+          "name": "VM1-vnet-sub1",
           "primary": true,
           "subnetId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/VM1-vnet/subnets/default",
           "applicationGatewayBackendAddressPools": [],
@@ -181,9 +181,9 @@
           "applicationSecurityGroups": [],
           "loadBalancerInboundNatPools": [],
           "enableAcceleratedNetworking": false,
-          "nsgName": "basicNsgTP1-vnet",
-          "nsgId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgTP1-vnet",
-          "pipName": "publicIp-TP1-vnet"
+          "nsgName": "basicNsgVM1-vnet",
+          "nsgId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgVM1-vnet",
+          "pipName": "publicIp-VM1-vnet"
         }
       ]
     },
