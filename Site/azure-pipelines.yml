@@ -69,7 +69,7 @@ jobs:
         location: $(location)
         templateLocation: 'Linked artifact'
         csmFile: '$(Build.SourcesDirectory)\Site\StorageAccount\azuredeploy.json'
-        csmParametersFile: '$(Build.SourcesDirectory\Site\StorageAccount\azuredeploy.parameters.json'
+        csmParametersFile: '$(Build.SourcesDirectory)\Site\StorageAccount\azuredeploy.parameters.json'
         deploymentMode: 'Incremental'
         deploymentOutputs: 'StorageAccountDeployment'
 
