@@ -73,11 +73,12 @@ jobs:
         deploymentMode: 'Incremental'
         deploymentOutputs: 'StorageAccountDeployment'
 
-    - task: PowerShell@2
+    - task: AzurePowerShell@5
       displayName: Pushing PowerShell File onto Storage Account
       inputs:
-        targetType: 'inline'
-        script: |
+        azureSubscription: 167fcb55-1d31-4096-90a8-f9e0a30d3853
+        ScriptType: InlineScript
+        Inline: |
               Write-Host $(StorageAccountDeployment.storageName.Value)
               Write-Host $(StorageAccountDeployment.storageKey.Value)
               Write-Host $(StorageAccountDeployment.storageContainer.Value)
