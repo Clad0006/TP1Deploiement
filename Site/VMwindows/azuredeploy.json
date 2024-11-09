@@ -366,14 +366,7 @@
           "computerNamePrefix": "VM",
           "windowsConfiguration": {
             "enableAutomaticUpdates": true,
-            "provisionVmAgent": true,
-            "patchSettings": {
-              "enableHotpatching": "[parameters('enableHotpatching')]",
-              "patchMode": "[parameters('patchMode')]",
-              "automaticByPlatformSettings": {
-                "rebootSetting": "[parameters('rebootSetting')]"
-              }
-            }
+            "provisionVmAgent": true
           }
         },
           "securityProfile": {
