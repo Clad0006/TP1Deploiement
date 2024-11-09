@@ -3,7 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
-      "value": "eastus"
+      "value": "canadacentral"
     },
     "osDiskType": {
       "value": "StandardSSD_LRS"
@@ -24,16 +24,16 @@
       ]
     },
     "virtualNetworkId": {
-      "value": "/subscriptions/970fcef5-9c23-4f7d-a11b-5a96d104f066/resourceGroups/Guro/providers/Microsoft.Network/virtualNetworks/Guro-vnet"
+      "value": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourcegroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/TP1-vnet"
     },
     "virtualNetworkName": {
-      "value": "Guro-vnet"
+      "value": "TP1-vnet"
     },
     "networkSecurityGroups": {
       "value": [
         {
-          "name": "basicNsgGuro-vnet-nic01",
-          "id": "/subscriptions/970fcef5-9c23-4f7d-a11b-5a96d104f066/resourceGroups/Guro/providers/Microsoft.Network/networkSecurityGroups/basicNsgGuro-vnet-nic01",
+          "name": "basicNsgTP1-vnet",
+          "id": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgTP1-vnet",
           "rules": [
             {
               "name": "Tcp",
@@ -55,9 +55,9 @@
     "networkInterfaceConfigurations": {
       "value": [
         {
-          "name": "Guro-vnet-nic01",
+          "name": "TP1-vnet-sub1",
           "primary": true,
-          "subnetId": "/subscriptions/970fcef5-9c23-4f7d-a11b-5a96d104f066/resourceGroups/Guro/providers/Microsoft.Network/virtualNetworks/Guro-vnet/subnets/default",
+          "subnetId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/TP1-vnet/subnets/default",
           "applicationGatewayBackendAddressPools": [],
           "loadBalancerBackendAddressPools": [
             {
@@ -67,9 +67,9 @@
           "applicationSecurityGroups": [],
           "loadBalancerInboundNatPools": [],
           "enableAcceleratedNetworking": false,
-          "nsgName": "basicNsgGuro-vnet-nic01",
-          "nsgId": "/subscriptions/970fcef5-9c23-4f7d-a11b-5a96d104f066/resourceGroups/Guro/providers/Microsoft.Network/networkSecurityGroups/basicNsgGuro-vnet-nic01",
-          "pipName": "publicIp-Guro-vnet-nic01"
+          "nsgName": "basicNsgTP1-vnet-sub1",
+          "nsgId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/networkSecurityGroups/basicNsgTP1-vnet-sub1",
+          "pipName": "publicIp-TP1-vnet-sub1"
         }
       ]
     },
