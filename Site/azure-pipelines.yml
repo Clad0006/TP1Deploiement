@@ -1,8 +1,7 @@
 trigger:
   - master #s'enclenche lorsqu'on push sur la branche master
 
-pool:
-  vmImage: 'ubuntu-latest' #image linux
+pool: "Default"
 
 stages:
   - stage: DeployResources
