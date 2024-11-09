@@ -3,11 +3,33 @@ trigger:
 
 pool: "default"
 
+variables:
+- name: CloudInitContent
+
 steps:
-- task: Bash@3
-  displayName: Exécuter le script de déploiement
+- task: PowerShell@2
   inputs:
-    filePath: '$(System.DefaultWorkingDirectory)/Site/ScriptShellTP1.sh'
+    targetType: 'inline'
+    script: |
+      $CloudContent = Get-Content -Path .\AzureResourceGroup12\Cloud-init.txt -Raw
+      Write-Host $CloudContent
+      $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
+      Write-Host $encodedContent
+      Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'Azure subscription 1(1)(167fcb55-1d31-4096-90a8-f9e0a30d3853)'
+    subscriptionId: '167fcb55-1d31-4096-90a8-f9e0a30d3853'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'TP1Deploiement'
+    location: 'Canada Central'
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup12\azuredeploy.json'
+    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup12\azuredeploy.parameters.json'
+    overrideParameters: -customData $(CloudInitContent) -adminPassword $(AdminPass)
+    deploymentMode: 'Incremental'
 
 - task: NodeTool@0
   inputs:
