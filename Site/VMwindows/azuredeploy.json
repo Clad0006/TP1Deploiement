@@ -445,7 +445,7 @@
         }
       },
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName1'))]"
+        "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('virtualMachineScaleSetName'))]"
       ]
     }
   ],
