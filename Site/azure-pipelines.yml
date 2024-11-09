@@ -1,7 +1,8 @@
 trigger:
   - master #s'enclenche lorsqu'on push sur la branche master
 
-pool: "default"
+pool:
+  name: default
 
 stages:
   - stage: DeployResources
