@@ -141,7 +141,7 @@
       "value": ""
     },
     "virtualNetworkId": {
-      "value": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourcegroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/TP1-vnet"
+      "value": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourcegroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/VM1-vnet"
     },
     "networkSecurityGroups": {
       "value": [
@@ -171,7 +171,7 @@
         {
           "name": "TP1-vnet-sub1",
           "primary": true,
-          "subnetId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/TP1-vnet/subnets/default",
+          "subnetId": "/subscriptions/167fcb55-1d31-4096-90a8-f9e0a30d3853/resourceGroups/TP1Deploiement/providers/Microsoft.Network/virtualNetworks/VM1-vnet/subnets/default",
           "applicationGatewayBackendAddressPools": [],
           "loadBalancerBackendAddressPools": [
             {
