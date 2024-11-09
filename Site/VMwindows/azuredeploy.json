@@ -77,15 +77,6 @@
     "adminPassword": {
       "type": "securestring"
     },
-    "patchMode": {
-      "type": "string"
-    },
-    "enableHotpatching": {
-      "type": "bool"
-    },
-    "rebootSetting": {
-      "type": "string"
-    },
     "securityType": {
       "type": "string"
     },

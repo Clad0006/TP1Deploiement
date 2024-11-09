@@ -113,15 +113,6 @@
     "adminPassword": {
       "value": "admin-password1"
     },
-    "patchMode": {
-      "value": "AutomaticByPlatform"
-    },
-    "enableHotpatching": {
-      "value": true
-    },
-    "rebootSetting": {
-      "value": "IfRequired"
-    },
     "securityType": {
       "value": "TrustedLaunch"
     },
