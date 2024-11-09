@@ -357,7 +357,24 @@
             ]
           },
           "extensionProfile": {
-            "extensions": []
+            "extensions": [
+              {
+                "name": "HealthExtension",
+                "properties": {
+                  "publisher": "Microsoft.ManagedServices",
+                  "type": "ApplicationHealthWindows",
+                  "autoUpgradeMinorVersion": true,
+                  "typeHandlerVersion": "1.0",
+                  "settings": {
+                    "protocol": "Tcp",
+                    "port": 80,
+                    "requestPath": "</requestPath>",
+                    "intervalInSeconds": 5,
+                    "numberOfProbes": 1
+                  }
+                }
+              }
+            ]
           },
           "osProfile": {
           "computerName": "[parameters('virtualMachineComputerName1')]",

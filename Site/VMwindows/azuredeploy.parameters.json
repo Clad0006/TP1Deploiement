@@ -114,10 +114,10 @@
       "value": "admin-password1"
     },
     "patchMode": {
-      "value": "AutomaticByOS"
+      "value": "AutomaticByPlatform"
     },
     "enableHotpatching": {
-      "value": false
+      "value": true
     },
     "rebootSetting": {
       "value": "IfRequired"
