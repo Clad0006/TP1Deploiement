@@ -7,7 +7,7 @@ steps:
 - task: Bash@3
   displayName: Exécuter le script de déploiement
   inputs:
-    filePath: '$(System.DefaultWorkingDirectory)/ScriptShellTP1.sh'
+    filePath: '$(System.DefaultWorkingDirectory)/Site/ScriptShellTP1.sh'
 
 - task: NodeTool@0
   inputs:
