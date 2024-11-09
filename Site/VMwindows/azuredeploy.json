@@ -380,7 +380,7 @@
         "capacity": "[int(parameters('instanceCount'))]"
       },
       "identity": {
-        "type": "systemAssigned"
+        "type": "None"
       },
       "zones": [
         "[parameters('virtualMachine1Zone')]"
