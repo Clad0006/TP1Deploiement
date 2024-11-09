@@ -3,16 +3,27 @@ trigger:
 
 pool: "default"
 
-variables:
-- name: CloudInitContent
-
 steps:
 - task: PowerShell@2
+  displayName: Exécuter le script de déploiement
   inputs:
-    targetType: 'inline'
-    script: |
-      $CloudContent = Get-Content -Path .\AzureResourceGroup12\Cloud-init.txt -Raw
-      Write-Host $CloudContent
-      $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
-      Write-Host $encodedContent
-      Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
+    targetType: 'filePath'
+    filePath: '$(System.DefaultWorkingDirectory)/ScriptShellTP1.sh'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '16.x'
+- task: Npm@1
+  inputs:
+    command: 'install' # installation des dépendances
+    workingDir: '$(System.DefaultWorkingDirectory)'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)'
+    customCommand: 'run build' # compilation du projet
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)'
+    customCommand: 'run test' # lancement des tests
