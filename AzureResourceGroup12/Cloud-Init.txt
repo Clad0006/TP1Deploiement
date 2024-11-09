@@ -4,6 +4,7 @@ packages:
   - nginx
   - nodejs
   - npm
+  - git
 write_files:
   - owner: www-data:www-data
     path: /etc/nginx/sites-available/default
@@ -39,7 +40,7 @@ runcmd:
   - git init
   - git remote add origin https://github.com/Clad0006/TP1Deploiement.git
   - git pull origin master
-  - cd TP1Deploiement/Site/code-site
+  - cd "/home/myapp/TP1Deploiement/Site/code-site"
   - npm install
   - npm run build
   - npm run test
