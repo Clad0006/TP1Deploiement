@@ -20,22 +20,14 @@ write_files:
           proxy_cache_bypass $http_upgrade;
         }
       }
-  - owner: www-data:www-data
-    path: /home/myapp/index.js
-    defer: true
-    content: |
-      var express = require('express')
-      var app = express()
-      var os = require('os');
-      app.get('/', function (req, res) {
-        res.send('Hello World from host ' + os.hostname() + '!')
-      })
-      app.listen(3000, function () {
-        console.log('Hello world app listening on port 3000!')
-      })
 runcmd:
   - service nginx restart
   - cd "/home/myapp"
-  - npm init
-  - npm install express -y
-  - nodejs index.js
+  - git init
+  - git remote add origin https://github.com/Clad0006/TP1Deploiement.git
+  - git pull origin master
+  - cd TP1Deploiement/Site/code-site
+  - npm install
+  - npm run build
+  - npm run test
+  - nodejs src/index.js
