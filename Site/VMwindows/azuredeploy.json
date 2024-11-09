@@ -1,11 +1,26 @@
 {
-  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",  
   "contentVersion": "1.0.0.0",
   "parameters": {
     "location": {
       "type": "string"
     },
-    "osDiskType": {
+    "networkInterfaceName1": {
+      "type": "string"
+    },
+    "enableAcceleratedNetworking": {
+      "type": "bool"
+    },
+    "networkSecurityGroupName": {
+      "type": "string"
+    },
+    "networkSecurityGroupRules": {
+      "type": "array"
+    },
+    "subnetName": {
+      "type": "string"
+    },
+    "virtualNetworkName": {
       "type": "string"
     },
     "addressPrefixes": {
@@ -14,10 +29,79 @@
     "subnets": {
       "type": "array"
     },
-    "virtualNetworkId": {
+    "publicIpAddressName1": {
       "type": "string"
     },
-    "virtualNetworkName": {
+    "publicIpAddressType": {
+      "type": "string"
+    },
+    "publicIpAddressSku": {
+      "type": "string"
+    },
+    "pipDeleteOption": {
+      "type": "string"
+    },
+    "virtualMachineName": {
+      "type": "string"
+    },
+    "virtualMachineName1": {
+      "type": "string"
+    },
+    "virtualMachineComputerName1": {
+      "type": "string"
+    },
+    "virtualMachineRG": {
+      "type": "string"
+    },
+    "osDiskType": {
+      "type": "string"
+    },
+    "osDiskDeleteOption": {
+      "type": "string"
+    },
+    "virtualMachineSize": {
+      "type": "string"
+    },
+    "nicDeleteOption": {
+      "type": "string"
+    },
+    "hibernationEnabled": {
+      "type": "bool"
+    },
+    "adminUsername": {
+      "type": "string"
+    },
+    "adminPassword": {
+      "type": "secureString"
+    },
+    "patchMode": {
+      "type": "string"
+    },
+    "enableHotpatching": {
+      "type": "bool"
+    },
+    "rebootSetting": {
+      "type": "string"
+    },
+    "securityType": {
+      "type": "string"
+    },
+    "secureBoot": {
+      "type": "bool"
+    },
+    "vTPM": {
+      "type": "bool"
+    },
+    "virtualMachine1Zone": {
+      "type": "string"
+    },
+    "FileName": {
+      "type": "string"
+    },
+    "FileURI": {
+      "type": "string"
+    },
+    "virtualNetworkId": {
       "type": "string"
     },
     "networkSecurityGroups": {
@@ -64,30 +148,13 @@
     },
     "upgradePolicy": {
       "type": "string"
-    },
-    "hibernationEnabled": {
-      "type": "bool"
-    },
-    "adminUsername": {
-      "type": "string"
-    },
-    "adminPassword": {
-      "type": "secureString"
-    },
-    "customData": {
-      "type": "string"
-    },
-    "securityType": {
-      "type": "string"
-    },
-    "secureBoot": {
-      "type": "bool"
-    },
-    "vTPM": {
-      "type": "bool"
     }
   },
   "variables": {
+    "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
+    "vnetName": "[parameters('virtualNetworkName')]",
+    "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+    "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]",
     "storageApiVersion": "2021-01-01",
     "networkApiVersion": "2020-11-01",
     "virtualMachineScaleSetApiVersion": "2023-09-01",
@@ -107,32 +174,13 @@
       }
     },
     {
-      "name": "[parameters('networkSecurityGroups')[copyIndex()].name]",
+      "name": "[parameters('networkSecurityGroupName')]",
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2020-05-01",
       "location": "[parameters('location')]",
       "properties": {
-        "securityRules": "[parameters('networkSecurityGroups')[copyIndex()].rules]"
-      },
-      "copy": {
-        "name": "networkSecurityGroups",
-        "count": "[length(parameters('networkSecurityGroups'))]"
+        "securityRules": "[parameters('networkSecurityGroupRules')]"
       }
-    },
-    {
-      "name": "[concat(parameters('loadBalancerName'), '-publicip')]",
-      "type": "Microsoft.Network/publicIpAddresses",
-      "apiVersion": "2020-08-01",
-      "location": "[parameters('location')]",
-      "properties": {
-        "publicIpAllocationMethod": "Static",
-        "publicIPAddressVersion": "IPv4",
-        "idleTimeoutInMinutes": 15
-      },
-      "sku": {
-        "name": "Standard"
-      },
-      "zones": []
     },
     {
       "name": "[parameters('loadBalancerName')]",
@@ -231,19 +279,19 @@
       "properties": {
         "virtualMachineProfile": {
           "storageProfile": {
-            "osDisk": {
-              "createOption": "fromImage",
-              "caching": "ReadWrite",
-              "managedDisk": {
-                "storageAccountType": "[parameters('osDiskType')]"
-              }
+          "osDisk": {
+            "createOption": "fromImage",
+            "managedDisk": {
+              "storageAccountType": "[parameters('osDiskType')]"
             },
-            "imageReference": {
-              "publisher": "canonical",
-              "offer": "ubuntu-24_04-lts",
-              "sku": "server",
-              "version": "latest"
-            }
+            "deleteOption": "[parameters('osDiskDeleteOption')]"
+          },
+          "imageReference": {
+            "publisher": "MicrosoftWindowsServer",
+            "offer": "WindowsServer",
+            "sku": "2022-datacenter-azure-edition-hotpatch",
+            "version": "latest"
+          }
           },
           "networkProfile": {
             "networkApiVersion": "[variables('networkApiVersion')]",
@@ -280,23 +328,27 @@
             "extensions": []
           },
           "osProfile": {
-            "computerNamePrefix": "[variables('namingInfix')]",
-            "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]",
-            "linuxConfiguration": {
-              "disablePasswordAuthentication": false,
-              "patchSettings": {
-                "patchMode": "ImageDefault"
+          "computerName": "[parameters('virtualMachineComputerName1')]",
+          "adminUsername": "[parameters('adminUsername')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "windowsConfiguration": {
+            "enableAutomaticUpdates": true,
+            "provisionVmAgent": true,
+            "patchSettings": {
+              "enableHotpatching": "[parameters('enableHotpatching')]",
+              "patchMode": "[parameters('patchMode')]",
+              "automaticByPlatformSettings": {
+                "rebootSetting": "[parameters('rebootSetting')]"
               }
-            },
-            "customData": "[parameters('customData')]"
-          },
-          "securityProfile": {
-            "securityType": "[parameters('securityType')]",
-            "uefiSettings": {
-              "secureBootEnabled": "[parameters('secureBoot')]",
-              "vTpmEnabled": "[parameters('vTPM')]"
             }
+          }
+        },
+          "securityProfile": {
+          "securityType": "[parameters('securityType')]",
+          "uefiSettings": {
+            "secureBootEnabled": "[parameters('secureBoot')]",
+            "vTpmEnabled": "[parameters('vTPM')]"
+          }
           }
         },
         "orchestrationMode": "Flexible",
@@ -312,7 +364,90 @@
       "sku": {
         "name": "[parameters('instanceSize')]",
         "capacity": "[int(parameters('instanceCount'))]"
+      },
+      "identity": {
+        "type": "systemAssigned"
+      },
+      "zones": [
+        "[parameters('virtualMachine1Zone')]"
+      ]
+    },
+    {
+      "name": "[parameters('networkInterfaceName1')]",
+      "type": "Microsoft.Network/networkInterfaces",
+      "apiVersion": "2022-11-01",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+        "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
+        "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "subnet": {
+                "id": "[variables('subnetRef')]"
+              },
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIpAddress": {
+                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]",
+                "properties": {
+                  "deleteOption": "[parameters('pipDeleteOption')]"
+                }
+              }
+            }
+          }
+        ],
+        "enableAcceleratedNetworking": "[parameters('enableAcceleratedNetworking')]",
+        "networkSecurityGroup": {
+          "id": "[variables('nsgId')]"
+        }
       }
+    },
+    {
+      "name": "[concat(parameters('loadBalancerName'), '-publicip')]",
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2020-08-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIpAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
+        "idleTimeoutInMinutes": 15
+      },
+      "sku": {
+        "name": "Standard"
+      },
+      "zones": []
+    },
+    {
+      "name": "Microsoft.CustomScriptExtension1",
+      "apiVersion": "2015-01-01",
+      "type": "Microsoft.Resources/deployments",
+      "properties": {
+        "mode": "incremental",
+        "templateLink": {
+          "uri": "https://catalogartifact.azureedge.net/publicartifacts/Microsoft.CustomScriptExtension-arm-2.0.58/MainTemplate.json"
+        },
+        "parameters": {
+          "fileUris": {
+            "value": "[parameters('FileURI')]"
+          },
+          "arguments": {
+            "value": "powershell.exe -ExecutionPolicy Unrestricted -File [parameters('FileName')]"
+          },
+          "vmName": {
+            "value": "[parameters('virtualMachineName1')]"
+          },
+          "location": {
+            "value": "eastus"
+          }
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName1'))]"
+      ]
     }
   ],
   "outputs": {

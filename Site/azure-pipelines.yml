@@ -1,53 +1,121 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
 trigger:
 - master
 
 pool: "default"
 
 variables:
-- name: CloudInitContent
+  - name: resourceGroupName
+    value: 'TP1Deploiement'
+  - name: location
+    value: 'canadacentral'
+  - name: FileName
+    value: 'CustomExtension.ps1'
+  - name: FileURL
+    value: 'defaultValue'
 
-steps:
-- task: PowerShell@2
-  inputs:
-    targetType: 'inline'
-    script: |
-      $CloudContent = Get-Content -Path .\AzureResourceGroup12\Cloud-init.txt -Raw
-      Write-Host $CloudContent
-      $encodedContent = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($CloudContent))
-      Write-Host $encodedContent
-      Write-Host "##vso[task.setvariable variable=CloudInitContent;]$encodedContent"
+jobs:
+  - job: ConfigurationFileTest
+    displayName: Configuration File Test
 
-- task: AzureResourceManagerTemplateDeployment@3
-  inputs:
-    deploymentScope: 'Resource Group'
-    azureResourceManagerConnection: 'Azure subscription 1(1)(167fcb55-1d31-4096-90a8-f9e0a30d3853)'
-    subscriptionId: '167fcb55-1d31-4096-90a8-f9e0a30d3853'
-    action: 'Create Or Update Resource Group'
-    resourceGroupName: 'TP1Deploiement'
-    location: 'Canada Central'
-    templateLocation: 'Linked artifact'
-    csmFile: '$(Build.SourcesDirectory)\AzureResourceGroup12\azuredeploy.json'
-    csmParametersFile: '$(Build.SourcesDirectory)\AzureResourceGroup12\azuredeploy.parameters.json'
-    overrideParameters: -customData $(CloudInitContent) -adminPassword $(AdminPassword)
-    deploymentMode: 'Incremental'
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      displayName: Deploying Storage Account
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1(167fcb55-1d31-4096-90a8-f9e0a30d3853)'
+        subscriptionId: '167fcb55-1d31-4096-90a8-f9e0a30d3853'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: $(resourceGroupName)
+        location: $(location)
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.SourcesDirectory)\StorageAccount\azuredeploy.json'
+        csmParametersFile: '$(Build.SourcesDirectory)\StorageAccount\azuredeploy.parameters.json'
+        deploymentMode: 'Validation'
 
-- task: NodeTool@0
-  inputs:
-    versionSpec: '16.x'
-- task: Npm@1
-  displayName: Installer les dépendances
-  inputs:
-    command: 'install'
-    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
-- task: Npm@1
-  displayName: Compiler le projet
-  inputs:
-    command: 'custom'
-    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
-    customCommand: 'run build'
-- task: Npm@1
-  displayName: Lancer les tests
-  inputs:
-    command: 'custom'
-    workingDir: '$(System.DefaultWorkingDirectory)/Site/r301-js-movies'
-    customCommand: 'run test'
+    - task: AzureResourceManagerTemplateDeployment@3
+      displayName: Deploying VM
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1(167fcb55-1d31-4096-90a8-f9e0a30d3853)'
+        subscriptionId: '167fcb55-1d31-4096-90a8-f9e0a30d3853'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: $(resourceGroupName)
+        location: $(location)
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.SourcesDirectory)\VMwindows\azuredeploy.json'
+        csmParametersFile: '$(Build.SourcesDirectory)\VMwindows\azuredeploy.parameters.json'
+        overrideParameters: '-FileURI $(FileURL) -FileName $(FileName) -adminPassword $(AdminPass)'
+        deploymentMode: 'Validation'
+
+  - job: InfrastructureDeployment
+    displayName: Infrastructure Deployement
+    dependsOn: ConfigurationFileTest
+    condition: succeeded()
+
+    steps:
+    - task: AzureResourceManagerTemplateDeployment@3
+      displayName: Deploying Storage Account
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1(167fcb55-1d31-4096-90a8-f9e0a30d3853)'
+        subscriptionId: '167fcb55-1d31-4096-90a8-f9e0a30d3853'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: $(resourceGroupName)
+        location: $(location)
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.SourcesDirectory)\StorageAccount\azuredeploy.json'
+        csmParametersFile: '$(Build.SourcesDirectory)\StorageAccount\azuredeploy.parameters.json'
+        deploymentMode: 'Incremental'
+        deploymentOutputs: 'StorageAccountDeployment'
+
+    - task: PowerShell@2
+      displayName: Pushing PowerShell File onto Storage Account
+      inputs:
+        targetType: 'inline'
+        script: |
+              Write-Host $(StorageAccountDeployment.storageName.Value)
+              Write-Host $(StorageAccountDeployment.storageKey.Value)
+              Write-Host $(StorageAccountDeployment.storageContainer.Value)
+
+              $context = New-AzStorageContext -StorageAccountName $(StorageAccountDeployment.storageName.Value) -StorageAccountKey $(StorageAccountDeployment.storageKey.Value)
+              $setParams = @{
+                  Container =  $(StorageAccountDeployment.storageContainer.Value)
+                  File      = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine('$(Build.SourcesDirectory)', './VMwindows/$(FileName)'))
+                  Context   = $context
+              }
+              Write-Host $setParams.File
+
+              $blob = Set-AzStorageBlobContent @setParams -Force
+              $url = $blob.ICloudBlob.Uri.AbsoluteUri
+
+              Write-Host $url
+
+              Write-Host "##vso[task.setvariable variable=FileURL]$url"
+
+    - task: PowerShell@2
+      displayName: Test Value
+      inputs:
+        targetType: 'inline'
+        script: |
+              Write-Host $(FileURL)
+
+    - task: AzureResourceManagerTemplateDeployment@3
+      displayName: Deploying VM
+      inputs:
+        deploymentScope: 'Resource Group'
+        azureResourceManagerConnection: 'Azure subscription 1(167fcb55-1d31-4096-90a8-f9e0a30d3853)'
+        subscriptionId: '167fcb55-1d31-4096-90a8-f9e0a30d3853'
+        action: 'Create Or Update Resource Group'
+        resourceGroupName: $(resourceGroupName)
+        location: $(location)
+        templateLocation: 'Linked artifact'
+        csmFile: '$(Build.SourcesDirectory)\VMwindows\azuredeploy.json'
+        csmParametersFile: '$(Build.SourcesDirectory)\VMwindows\azuredeploy.parameters.json'
+        overrideParameters: '-FileURI $(FileURL) -FileName $(FileName) -adminPassword $(AdminPass)'
+        deploymentMode: 'Incremental'
+        deploymentOutputs: 'StorageAccountDeployment'
