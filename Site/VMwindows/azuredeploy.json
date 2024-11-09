@@ -211,7 +211,7 @@
             "name": "[concat(parameters('loadBalancerName'), '-frontendconfig01')]",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]"
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1')]"
               }
             }
           }
@@ -406,7 +406,7 @@
               },
               "privateIPAllocationMethod": "Dynamic",
               "publicIpAddress": {
-                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]",
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1')]",
                 "properties": {
                   "deleteOption": "[parameters('pipDeleteOption')]"
                 }
