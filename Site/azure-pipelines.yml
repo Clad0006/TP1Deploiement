@@ -4,26 +4,28 @@ trigger:
 pool: "default"
 
 steps:
-- task: PowerShell@2
+- task: Bash@3
   displayName: Exécuter le script de déploiement
   inputs:
-    targetType: 'filePath'
     filePath: '$(System.DefaultWorkingDirectory)/ScriptShellTP1.sh'
 
 - task: NodeTool@0
   inputs:
     versionSpec: '16.x'
 - task: Npm@1
+  displayName: Installer les dépendances
   inputs:
-    command: 'install' # installation des dépendances
+    command: 'install'
     workingDir: '$(System.DefaultWorkingDirectory)'
 - task: Npm@1
+  displayName: Compiler le projet
   inputs:
     command: 'custom'
     workingDir: '$(System.DefaultWorkingDirectory)'
-    customCommand: 'run build' # compilation du projet
+    customCommand: 'run build'
 - task: Npm@1
+  displayName: Lancer les tests
   inputs:
     command: 'custom'
     workingDir: '$(System.DefaultWorkingDirectory)'
-    customCommand: 'run test' # lancement des tests
+    customCommand: 'run test'
