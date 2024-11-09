@@ -183,6 +183,21 @@
       }
     },
     {
+      "name": "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]",
+      "type": "Microsoft.Network/publicIpAddresses",
+      "apiVersion": "2020-08-01",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIpAllocationMethod": "Static",
+        "publicIPAddressVersion": "IPv4",
+        "idleTimeoutInMinutes": 15
+      },
+      "sku": {
+        "name": "Standard"
+      },
+      "zones": []
+    },
+    {
       "name": "[parameters('loadBalancerName')]",
       "type": "Microsoft.Network/loadBalancers",
       "apiVersion": "2021-05-01",
@@ -196,7 +211,7 @@
             "name": "[concat(parameters('loadBalancerName'), '-frontendconfig01')]",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIpAddresses', concat(parameters('loadBalancerName'), '-publicip'))]"
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1')]"
               }
             }
           }
@@ -404,21 +419,6 @@
           "id": "[variables('nsgId')]"
         }
       }
-    },
-    {
-      "name": "[concat(parameters('loadBalancerName'), '-publicip')]",
-      "type": "Microsoft.Network/publicIpAddresses",
-      "apiVersion": "2020-08-01",
-      "location": "[parameters('location')]",
-      "properties": {
-        "publicIpAllocationMethod": "Static",
-        "publicIPAddressVersion": "IPv4",
-        "idleTimeoutInMinutes": 15
-      },
-      "sku": {
-        "name": "Standard"
-      },
-      "zones": []
     },
     {
       "name": "Microsoft.CustomScriptExtension1",
