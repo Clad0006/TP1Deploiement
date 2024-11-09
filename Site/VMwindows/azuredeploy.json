@@ -183,8 +183,8 @@
       }
     },
     {
-      "name": "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]",
-      "type": "Microsoft.Network/publicIpAddresses",
+      "name": "[parameters('publicIpAddressName1')]",
+      "type": "Microsoft.Network/publicIPAddresses",
       "apiVersion": "2020-08-01",
       "location": "[parameters('location')]",
       "properties": {
@@ -211,7 +211,7 @@
             "name": "[concat(parameters('loadBalancerName'), '-frontendconfig01')]",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1')]"
+                "id": "[resourceId('Microsoft.Network/publicIpAddresses', [concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName1'))]]"
               }
             }
           }
@@ -406,7 +406,7 @@
               },
               "privateIPAllocationMethod": "Dynamic",
               "publicIpAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1')]",
+                "id": "[resourceId(resourceGroup().name, 'Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName1'))]",
                 "properties": {
                   "deleteOption": "[parameters('pipDeleteOption')]"
                 }
